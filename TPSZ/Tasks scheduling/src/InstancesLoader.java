@@ -1,34 +1,45 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class InstancesLoader {
-    private File file;
+    private String filename;
 
-    public InstancesLoader(File file) {
-        this.file = file;
+    public InstancesLoader(String filename) {
+        this.filename = filename;
     }
 
     public Instance[] load() {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+
+            int instancesCount = readNumber(reader);
+            int tasksCount;
+            for(int instanceNumber=0; instanceNumber<instancesCount; instanceNumber++) {
+                tasksCount = readNumber(reader);
+                for(int taskNumber=0; taskNumber<tasksCount; taskNumber++) {
+
+                }
+            }
+
+
         }
         catch(IOException e) {
             e.printStackTrace();
         }
-        finally {
-
-        }
+        return new Instance[] {};
     }
 
-    public File getFile() {
-        return file;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
+    private int readNumber(BufferedReader reader) throws IOException {
+        String line = reader.readLine();
+        line = line.replaceAll("\\s+","");
+        return Integer.parseInt(line);
+    }
 }
