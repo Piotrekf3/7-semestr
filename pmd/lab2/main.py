@@ -1,61 +1,74 @@
 from random import *
-import itertools
-from numpy.random import choice
+from itertools import combinations
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
-def find_pairs(lst):
-    return [(a,b) for a,b in itertools.permutations(lst, 2) if a==b]
+def compute(n, p, nh, nd):
+    terrorists = 0
+    pairs = {}
 
-n = 1000
-p = 0.1
-nh = 100
-nd = 100
-data = [[0 for x in range(n)] for y in range(nd)] 
-terrorists = [[0 for x in range(n)] for y in range(n)] 
-seed()
+    for day in range(nd):
+        # print(day)
+        hotels = {}
+        for man in range(n):
+            # print("man=" + str(man))
+            if randint(1, p) == 1:
+                hotel = randint(1, nh)
+                if hotel not in hotels.keys():
+                    hotels[hotel] = []
+                hotels[hotel].append(man)
+        for hotel, visitors in hotels.items():
+            for vis1, vis2 in combinations(visitors, 2):
+                pair = str(vis1) + '-' + str(vis2)
+                pairs[pair] = pairs.get(pair, 0) + 1
 
-# for i in range(4):
-#     for j in range(i):
-#         print(i, j)
+    distinctPersons = set()
+    pairs_days_count_result = 0
+    for pair, count in pairs.items():
+        if count > 1:
+            terrorists += 1
+            pairs_days_count_result += len(list(combinations(range(count), 2)))
+            person1, person2 = pair.split('-')
+            distinctPersons.add(person1)
+            distinctPersons.add(person2)
 
+    values, counts = np.unique(list(pairs.values()), return_counts=True)
+    return [terrorists, len(distinctPersons), counts, pairs_days_count_result]
 
-for day in range(nd):
-    for man in range(n):
-        if choice([True, False], p = [p, 1-p]):
-            data[day][man] = randint(1, nh)
+def main():
+    n = 10000
+    p = 10
+    nh = 100
+    nd = 100
+    iterations = 5
+    seed()
 
-count = 0
-for day in range(nd):
-    for man in range(n):
-        for man2 in range(man):
-            if data[day][man] != 0 and man != man2 and data[day][man] == data[day][man2]:
-                terrorists[man][man2] += 1
-                if(terrorists[man][man2] == 2):
-                    count+=1
-# # print(terrorists)
-print(count)
-values, counts = np.unique(terrorists, return_counts=True)
-print(values, counts)
-plt.bar(values, counts, 0.5)
-plt.xticks(values)
-plt.show()
+    terrorists = 0
+    daysPairs = 0
+    distinctPersons = 0
+    counts = [0, 0, 0]
 
+    for i in range(iterations):
+        a, b, c, d = compute(n, p, nh, nd)
+        terrorists += a
+        distinctPersons += b
+        counts = [x + y for x, y in zip(counts, c)]
+        daysPairs += d
 
+    counts = [x/iterations for x in counts]
 
+    print("Podejrzane pary: " + str(terrorists/iterations))
+    print("Podejrzane pary osób i dni: " + str(daysPairs/iterations))
+    print("Podejrzane osoby: " + str(distinctPersons/iterations))
+    print("Histogram: " + str(counts))
 
-# count = 0
-# for day in range(nd):
-#     for man in range(n):
-#         if choice([True, False], p = [p, 1-p]):
-#             data[day][man] = randint(1, nh)
-#         for man2 in range(man):
-#             if data[day][man] != 0 and man != man2 and data[day][man] == data[day][man2]:
-#                 terrorists[man][man2] += 1
-#                 if(terrorists[man][man2] == 2):
-#                     count+=1
+    values = range(1, len(counts) + 1)
+    plt.bar(values, counts, 0.5)
+    plt.xticks(values)
+    plt.show()
 
-# print(terrorists)
-# print(count)
+if __name__ == "__main__":
+    main()
 # plt.hist(terrorists)
 # plt.show()
