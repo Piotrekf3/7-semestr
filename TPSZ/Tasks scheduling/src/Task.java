@@ -10,6 +10,12 @@ public class Task {
         this.latePenalty = latePenalty;
     }
 
+    public Task() {
+        this.processingTime = 0;
+        this.earlyPenalty = 0;
+        this.latePenalty = 0;
+    }
+
     public int getProcessingTime() {
         return processingTime;
     }

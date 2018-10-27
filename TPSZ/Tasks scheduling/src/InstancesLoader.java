@@ -13,15 +13,15 @@ public class InstancesLoader {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
 
             int instancesCount = readNumber(reader);
+            Instance[] instances = new Instance[instancesCount];
             int tasksCount;
+
             for(int instanceNumber=0; instanceNumber<instancesCount; instanceNumber++) {
                 tasksCount = readNumber(reader);
-                for(int taskNumber=0; taskNumber<tasksCount; taskNumber++) {
-
-                }
+                instances[instanceNumber] = readInstance(reader, tasksCount);
             }
 
-
+            return instances;
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -41,5 +41,16 @@ public class InstancesLoader {
         String line = reader.readLine();
         line = line.replaceAll("\\s+","");
         return Integer.parseInt(line);
+    }
+
+    private Instance readInstance(BufferedReader reader, int tasksCount) throws IOException {
+        String line;
+        Instance instance = new Instance();
+        for(int taskNumber=0; taskNumber<tasksCount; taskNumber++) {
+            line = reader.readLine();
+            String[] values = line.split("\\s+");
+            instance.addTask(new Task(Integer.parseInt(values[1]), Integer.parseInt(values[2]), Integer.parseInt(values[3])));
+        }
+        return instance;
     }
 }
