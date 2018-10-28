@@ -49,7 +49,7 @@ public class InstancesLoader {
         for(int taskNumber=0; taskNumber<tasksCount; taskNumber++) {
             line = reader.readLine();
             String[] values = line.split("\\s+");
-            instance.addTask(new Task(Integer.parseInt(values[1]), Integer.parseInt(values[2]), Integer.parseInt(values[3])));
+            instance.addTask(new Task(taskNumber, Integer.parseInt(values[1]), Integer.parseInt(values[2]), Integer.parseInt(values[3])));
         }
         return instance;
     }
