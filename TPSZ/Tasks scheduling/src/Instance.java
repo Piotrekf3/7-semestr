@@ -5,15 +5,18 @@ import java.util.Arrays;
 public class Instance {
     private ArrayList<Task> tasks;
     private int goalFunction;
+    private int startTime;
 
     public Instance() {
         this.tasks = new ArrayList<>();
         this.goalFunction = 0;
+        this.startTime = 0;
     }
 
     public Instance(Task tasks[]) {
         this.tasks = new ArrayList<>(Arrays.asList(tasks));
         this.goalFunction = 0;
+        this.startTime = 0;
     }
 
     public void addTask(Task task) {
@@ -27,7 +30,7 @@ public class Instance {
     public void saveToFile(int instanceNumber, double h) {
         String filename = "n" + this.tasks.size() + "k" + instanceNumber + "h" + h + ".txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            writer.write(this.goalFunction + "_" + h + "_" + 0 + "_" + getTasksId());
+            writer.write(this.goalFunction + " " + h + " " + 0 + " " + getTasksId());
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -50,4 +53,32 @@ public class Instance {
         }
         return stringBuilder.toString();
     }
+
+    public void schedule(double h) {
+        int deadline = (int) Math.floor(sumProcessingTime() * h);
+        computeGoalFunction(h, deadline);
+
+        int currentTime = 0;
+        ArrayList<Task> scheduledTasks = new ArrayList<>(this.tasks.size());
+        for(int i=0; i<this.tasks.size(); i++) {
+            if(currentTime < deadline) {
+
+            }
+            else {
+
+            }
+        }
+    }
+
+    private void computeGoalFunction(double h, int deadline) {
+        int currentTime = startTime;
+        int offset = 0;
+        for(Task task : this.tasks) {
+            currentTime += task.getProcessingTime();
+            offset = deadline - currentTime;
+            this.goalFunction += offset > 0 ? Math.abs(offset) * task.getEarlyPenalty() : Math.abs(offset) * task.getLatePenalty();
+        }
+    }
+
+    private int
 }
