@@ -10,7 +10,7 @@ public class InstancesLoader {
     }
 
     public Instance[] load() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("instances/" + filename))) {
 
             int instancesCount = readNumber(reader);
             Instance[] instances = new Instance[instancesCount];

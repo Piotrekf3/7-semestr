@@ -1,3 +1,5 @@
+import java.util.Comparator;
+
 public class Task {
 
     private int id;
@@ -45,5 +47,19 @@ public class Task {
 
     public int getId() {
         return id;
+    }
+}
+
+class SortByEarlyPenalty implements Comparator<Task> {
+    @Override
+    public int compare(Task task1, Task task2) {
+        return task1.getEarlyPenalty() - task2.getEarlyPenalty();
+    }
+}
+
+class SortByLatePenalty implements  Comparator<Task> {
+    @Override
+    public int compare(Task task1, Task task2) {
+        return task2.getLatePenalty() - task1.getLatePenalty();
     }
 }
