@@ -27,7 +27,7 @@ public class Instance {
     }
 
     public void saveToFile(int instanceNumber, double h) {
-        String filename = "results//n" + this.tasks.size() + "k" + instanceNumber + "h" + h + ".txt";
+        String filename = "results//n" + this.tasks.size() + "k" + (instanceNumber + 1) + "h" + (int)(h*10) + ".txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(this.goalFunction + " " + h + " " + 0 + " " + getTasksId());
         }
@@ -70,7 +70,8 @@ public class Instance {
         computeGoalFunction(h, deadline);
     }
 
-    private void computeGoalFunction(double h, int deadline) {
+    public int computeGoalFunction(double h, int deadline) {
+        this.goalFunction = 0;
         int currentTime = startTime;
         int offset = 0;
         for(Task task : this.tasks) {
@@ -78,6 +79,7 @@ public class Instance {
             offset = deadline - currentTime;
             this.goalFunction += offset > 0 ? Math.abs(offset) * task.getEarlyPenalty() : Math.abs(offset) * task.getLatePenalty();
         }
+        return this.goalFunction;
     }
 
 //    private int findMinPenaltyId(boolean earlyPenaly = false) {
@@ -94,4 +96,16 @@ public class Instance {
 //
 //        return index;
 //    }
+
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        if(startTime >= 0)
+            this.startTime = startTime;
+        else
+            this.startTime = 0;
+    }
 }

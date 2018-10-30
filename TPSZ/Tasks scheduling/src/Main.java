@@ -1,8 +1,15 @@
 public class Main {
     public static void main(String[] args) {
-        InstancesLoader loader = new InstancesLoader("sch1000.txt");
-        Instance[] instances = loader.load();
-        instances[0].schedule(0.8);
-        instances[0].saveToFile(0, 0.8);
+        String instancesPath = "instances/";
+//        double h = 0.8;
+//        Instance[] instances = new InstancesLoader("sch10.txt").load();
+//        for(int i=0; i<instances.length; i++) {
+//            instances[i].schedule(h);
+//            instances[i].saveToFile(i, h);
+//        }
+        if(Tester.test(instancesPath + "sch10.txt", "results/n10k1h8.txt"))
+            System.out.println("Ok");
+        else
+            System.out.println("!OK");
     }
 }
