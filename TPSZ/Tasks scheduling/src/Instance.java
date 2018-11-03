@@ -29,7 +29,7 @@ public class Instance {
     public void saveToFile(int instanceNumber, double h) {
         String filename = "results//n" + this.tasks.size() + "k" + (instanceNumber + 1) + "h" + (int)(h*10) + ".txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            writer.write(this.goalFunction + " " + h + " " + 0 + " " + getTasksId());
+            writer.write(this.goalFunction + " " + h + " " + this.startTime + " " + getTasksId());
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -55,9 +55,32 @@ public class Instance {
 
     public void schedule(double h) {
         int deadline = (int) Math.floor(sumProcessingTime() * h);
+        int step = deadline / 10;
 
-        int currentTime = 0;
-        ArrayList<Task> scheduledTasks = new ArrayList<>(this.tasks.size());
+        int bestGoalFunction = Integer.MAX_VALUE;
+        int index = 0;
+
+        for(int j=0; j<10; j++) {
+            int currentTime = this.startTime;
+            Collections.sort(this.tasks, new SortByEarlyPenalty());
+
+            for(int i=0; i<this.tasks.size(); i++) {
+                currentTime += this.tasks.get(i).getProcessingTime();
+                if(currentTime > deadline) {
+                    Collections.sort(this.tasks.subList(i, this.tasks.size()), new SortByLatePenalty());
+                    break;
+                }
+            }
+            int currentGoalFunction = computeGoalFunction(h, deadline);
+            if(currentGoalFunction < bestGoalFunction) {
+                bestGoalFunction = currentGoalFunction;
+                index = j;
+            }
+            this.startTime += step;
+        }
+
+        this.startTime = index * step;
+        int currentTime = this.startTime;
         Collections.sort(this.tasks, new SortByEarlyPenalty());
 
         for(int i=0; i<this.tasks.size(); i++) {
@@ -68,6 +91,7 @@ public class Instance {
             }
         }
         computeGoalFunction(h, deadline);
+
     }
 
     public int computeGoalFunction(double h, int deadline) {
