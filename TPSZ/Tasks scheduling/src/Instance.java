@@ -54,13 +54,14 @@ public class Instance {
     }
 
     public void schedule(double h) {
+        int stepsNumber = 100;
         int deadline = (int) Math.floor(sumProcessingTime() * h);
-        int step = deadline / 10;
+        int step = deadline / stepsNumber;
 
         int bestGoalFunction = Integer.MAX_VALUE;
         int index = 0;
 
-        for(int j=0; j<10; j++) {
+        for(int j=0; j<stepsNumber; j++) {
             int currentTime = this.startTime;
             Collections.sort(this.tasks, new SortByEarlyPenalty());
 
