@@ -1,0 +1,17 @@
+import scala.math.random
+
+val slices = 4
+val n = math.min(100000L * slices, Int.MaxValue).toInt 
+val xs = 1 until n 
+val rdd = sc.parallelize(xs, slices)
+val sample = rdd.map { i =>
+  val x = random
+  val y = random
+  (x, y)
+}
+ 
+val inside = sample.filter { case (x, y) => (x * x + y * y < 1) }
+ 
+val count = inside.count()
+ 
+println("Pi is roughly " + 4.0 * count / n)
