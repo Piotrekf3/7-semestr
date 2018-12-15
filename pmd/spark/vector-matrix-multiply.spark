@@ -1,0 +1,8 @@
+val x = sc.textFile("data/x.txt").map(line => {val t = line.split(","); (t(0).
+    trim.toInt, t(1).trim.toDouble)})
+val vectorX = x.map{case (i,v) => v}.collect
+val broadcastedX = sc.broadcast(vectorX)
+val matrix = sc.textFile("data/M.txt").map(line => {val t = line.split(","); (t(0).
+    trim.toInt, t(1).trim.toInt, t(2).trim.toDouble)})
+val v = matrix.map { case (i,j,a) => (i, a * broadcastedX.value(j-1))}.reduceByKey(_+_)
+v.toDF.orderBy("_1").show
