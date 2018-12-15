@@ -54,7 +54,7 @@ public class Instance {
     }
 
     public void schedule(double h) {
-        int stepsNumber = 100;
+        int stepsNumber = 10;
         int deadline = (int) Math.floor(sumProcessingTime() * h);
         int step = deadline / stepsNumber;
 
