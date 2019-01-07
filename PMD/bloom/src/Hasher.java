@@ -8,14 +8,14 @@ public class Hasher {
     private int mod;
 
     public Hasher(int max, int mod, int hashFunctionsNumber) {
-        this.mod = mod;
+        this.mod = max;
         this.a = generateRandomArray(max, hashFunctionsNumber);
         this.b = generateRandomArray(max, hashFunctionsNumber);
     }
 
     public int hash(int value, int functionNumber) {
         if(functionNumber >= 0 && functionNumber < this.getFunctionsCount()) {
-            return (int)(((long)this.a.get(functionNumber) * value + b.get(functionNumber)) % mod);
+            return (int)(((long)this.a.get(functionNumber) * value + b.get(functionNumber)) % this.mod);
         }
         System.err.println("Invalid hash function number");
         return 0;
