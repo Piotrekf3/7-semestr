@@ -31,11 +31,11 @@ for user, songs in dict.items():
     if users < users_number:
         print(users)
         jaccart[user] = {}
-        for neighbour, songs2 in dict.items():
+        for neighbour in range(user, len(dict)):
             try:
                 jaccart[user][neighbour] = jaccart[neighbour][user]
             except:
-                jaccart[user][neighbour] = jaccart_measure(songs,songs2)
+                jaccart[user][neighbour] = jaccart_measure(songs,dict[neighbour])
                 pass
         users += 1
 
